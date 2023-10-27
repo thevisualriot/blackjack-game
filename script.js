@@ -7,7 +7,7 @@ var keepPlaying;
 alert("Welcome to the Blackjack Game.\n\nYou play against the dealer. The one who hits 21 or the closest number below, wins.\n\n Ready? Press OK to start");
 
 
-// FIRST NUMBER
+// FIRST ROUND
 
 playerRandom = Math.floor(Math.random() * 21) + 1;
 
@@ -19,15 +19,17 @@ if (playerRandom === 21) {
     console.log(`player: ${playerRandom}`);
     playerTotal =+ playerRandom;
     keepPlaying = stayOrNot(playerRandom, playerTotal);
-    if (!keepPlaying) {
-        dealerRandom = randomizeUpToEleven();
-        dealerTotal += dealerRandom;
-    } 
+    dealerRandom = randomizeUpToEleven();
+    dealerTotal += dealerRandom;
 }
 
-// SECOND ROUND
+
+
+// NEXT ROUNDS
 
 while (keepPlaying) {
+
+    logTotal();
 
     playerRandom = randomizeUpToEleven();
     dealerRandom = randomizeUpToEleven();
@@ -49,70 +51,64 @@ while(!keepPlaying) {
     var differenceDealer = 21 - dealerTotal;
 
     if (differenceDealer > differencePlayer) {
-        console.log(`Player difference: ${differencePlayer} | Dealer difference: ${differenceDealer}`);
-        alert(`Well done, winner!\n\nYour total is ${playerTotal} and the dealer's is ${dealerTotal}`);
-        location.reload();
+        endGame(`Well done, winner!\n\nYour total is ${playerTotal} and the dealer's is ${dealerTotal}`);
     } else if (differenceDealer === differencePlayer) {
-        console.log(`Player difference: ${differencePlayer} | Dealer difference: ${differenceDealer}`);
-        alert(`it's a tie!\n\nYou both scored a total of ${playerRandom}`);
-        location.reload();
+        endGame(`it's a tie!\n\nYou both scored a total of ${playerRandom}`);
     } else if (differenceDealer < differencePlayer) {
-        console.log(`Player difference: ${differencePlayer} | Dealer difference: ${differenceDealer}`);
-        alert(`You lost, loser!\n\nYour total is ${playerTotal} and the dealer's is ${dealerTotal}`);
-        location.reload();
+        endGame(`You lost, loser!\n\nYour total is ${playerTotal} and the dealer's is ${dealerTotal}`);
     } else {
-        alert(`Did you just surrender? Eh. See you next time.`);
-        location.reload();
+        endGame(`Did you just surrender? Eh. See you next time.`);
     }
 }
 
 
 
 
-// FUNCTIONS
+/* ------------------------------------ FUNCTIONS ------------------------------------------- */
 
+// RANDOM CARD
 function randomizeUpToEleven() {
     return Math.floor(Math.random() * 11) + 2;
 }
 
+// HIT OR STAND?
 function stayOrNot(number, total) {
     var confirmation = confirm(`You hit ${number} and your total is ${total}.\n\nDo you hit [OK] or stand [CANCEL]?`);
     console.log(confirmation);
     return confirmation === true;
 }
 
-
+// CHECK RESULTS
 function checkResult() {
 
     if (playerTotal === 21) {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
         alert(`You hit 21! You won!`);
         location.reload();
     } else if (dealerTotal === 21) {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
         alert(`The dealer hits 21 and wins!`);
         location.reload();
     } else if (dealerTotal > 21) {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
         alert(`Lucky you! The dealer busts! You win!`);
         location.reload();
     } else if (playerTotal > 21) {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
         alert(`You bust and your total is ${playerTotal}. You lost the game, loser!`);
         location.reload();
     } else if (playerTotal > 21 && dealerTotal > 21) {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
         alert(`You both bust. Nobody wins.`);
         location.reload();
     } else if (playerTotal < 21 && dealerTotal > 17 && dealerTotal < 21) {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
         console.log(`The dealer stands`);
-    } else {
-        console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
-    }
+    } 
 }
 
+// LOG TOTAL FOR PLAYER AND DEALER
+function logTotal() {
+    console.log(`Player total: ${playerTotal} | Dealer total: ${dealerTotal}`);
+}
 
-
-
-
+// END GAME WITH AN ALERT
+function endGame(message) {
+    console.log(`Player difference: ${differencePlayer} | Dealer difference: ${differenceDealer}`);
+    alert(message);
+    location.reload();
+}
